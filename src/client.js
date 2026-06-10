@@ -180,46 +180,48 @@ export class SeedbaseClient {
 
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), this.requestTimeout);
-    let resp;
     try {
-      resp = await this._fetch(url, {
-        method: method.toUpperCase(),
-        headers,
-        body,
-        signal: controller.signal,
-      });
-    } catch (exc) {
-      if (exc && exc.name === "AbortError") {
-        throw new SeedbaseError(`Network error: request to ${url} timed out`);
+      let resp;
+      try {
+        resp = await this._fetch(url, {
+          method: method.toUpperCase(),
+          headers,
+          body,
+          signal: controller.signal,
+        });
+      } catch (exc) {
+        if (exc && exc.name === "AbortError") {
+          throw new SeedbaseError(`Network error: request to ${url} timed out`);
+        }
+        throw new SeedbaseError(`Network error: ${exc && exc.message ? exc.message : exc}`);
       }
-      throw new SeedbaseError(`Network error: ${exc && exc.message ? exc.message : exc}`);
+
+      if (!resp.ok) {
+        let text = "";
+        try {
+          text = await resp.text();
+        } catch {
+          text = "";
+        }
+        throw new SeedbaseError(httpErrorMessage(resp.status, text), resp.status);
+      }
+
+      if (raw) {
+        const buf = await resp.arrayBuffer();
+        return new Uint8Array(buf);
+      }
+
+      const text = await resp.text();
+      if (!text.trim()) {
+        return {};
+      }
+      try {
+        return JSON.parse(text);
+      } catch {
+        throw new SeedbaseError(`Server returned an unexpected non-JSON response from ${url}`);
+      }
     } finally {
       clearTimeout(timer);
-    }
-
-    if (!resp.ok) {
-      let text = "";
-      try {
-        text = await resp.text();
-      } catch {
-        text = "";
-      }
-      throw new SeedbaseError(httpErrorMessage(resp.status, text), resp.status);
-    }
-
-    if (raw) {
-      const buf = await resp.arrayBuffer();
-      return new Uint8Array(buf);
-    }
-
-    const text = await resp.text();
-    if (!text.trim()) {
-      return {};
-    }
-    try {
-      return JSON.parse(text);
-    } catch {
-      throw new SeedbaseError(`Server returned an unexpected non-JSON response from ${url}`);
     }
   }
 
@@ -243,7 +245,7 @@ export class SeedbaseClient {
   }
 
   async getProject(projectId) {
-    return this._request("GET", `/datasets/${projectId}/`);
+    return this._request("GET", `/datasets/${encodeURIComponent(projectId)}/`);
   }
 
   async listGenerations(projectId) {
@@ -251,7 +253,7 @@ export class SeedbaseClient {
   }
 
   async getGeneration(generationId) {
-    return this._request("GET", `/generations/${generationId}/`);
+    return this._request("GET", `/generations/${encodeURIComponent(generationId)}/`);
   }
 
   async generate(
@@ -280,7 +282,7 @@ export class SeedbaseClient {
       payload.rebase_to = rebaseTo;
     }
 
-    const create = await this._request("POST", `/datasets/${projectId}/generate/`, { payload });
+    const create = await this._request("POST", `/datasets/${encodeURIComponent(projectId)}/generate/`, { payload });
     const generationId = create && create.generation_id;
     if (!generationId) {
       throw new SeedbaseError("Generation did not return an id");
@@ -323,13 +325,13 @@ export class SeedbaseClient {
   }
 
   async exportConfig(projectId) {
-    const data = await this._request("GET", `/datasets/${projectId}/export-config/`);
+    const data = await this._request("GET", `/datasets/${encodeURIComponent(projectId)}/export-config/`);
     const config = data !== null && typeof data === "object" ? data.engine_config : null;
     return config !== null && typeof config === "object" && !Array.isArray(config) ? config : {};
   }
 
   async importConfig(projectId, config) {
-    const data = await this._request("POST", `/datasets/${projectId}/import-config/`, {
+    const data = await this._request("POST", `/datasets/${encodeURIComponent(projectId)}/import-config/`, {
       payload: { engine_config: config },
     });
     const result = data !== null && typeof data === "object" ? data.engine_config : null;
@@ -338,7 +340,7 @@ export class SeedbaseClient {
 
   async download(generationId, { format = null } = {}) {
     const exportFormat = format || "sql";
-    const path = `/generations/${generationId}/download/?export_format=${encodeURIComponent(exportFormat)}`;
+    const path = `/generations/${encodeURIComponent(generationId)}/download/?export_format=${encodeURIComponent(exportFormat)}`;
     return this._request("GET", path, { raw: true });
   }
 }

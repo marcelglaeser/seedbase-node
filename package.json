@@ -1,6 +1,6 @@
 {
   "name": "@seedbase/client",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Node.js client for Seedbase — generate realistic, relationship-preserving, privacy-safe test data and pull it into your database.",
   "type": "module",
   "main": "./index.js",
