@@ -1,0 +1,41 @@
+{
+  "name": "@seedbase/client",
+  "version": "0.1.0",
+  "description": "Node.js client for Seedbase — generate realistic, relationship-preserving, privacy-safe test data and pull it into your database.",
+  "type": "module",
+  "main": "./index.js",
+  "exports": {
+    ".": "./index.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node --test"
+  },
+  "files": [
+    "index.js",
+    "src",
+    "README.md"
+  ],
+  "keywords": [
+    "seedbase",
+    "test-data",
+    "synthetic-data",
+    "database",
+    "fixtures"
+  ],
+  "license": "MIT",
+  "author": "Marcel Gläser <contact@seedba.se>",
+  "homepage": "https://seedba.se",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marcelglaeser/seedbase-node.git"
+  },
+  "bugs": {
+    "url": "https://github.com/marcelglaeser/seedbase-node/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
