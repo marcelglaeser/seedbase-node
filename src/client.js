@@ -338,6 +338,12 @@ export class SeedbaseClient {
     return result !== null && typeof result === "object" && !Array.isArray(result) ? result : {};
   }
 
+  async getDdl(projectId, { dialect = null } = {}) {
+    const query = dialect ? `?dialect=${encodeURIComponent(dialect)}` : "";
+    const data = await this._request("GET", `/datasets/${encodeURIComponent(projectId)}/ddl/${query}`);
+    return typeof data?.ddl === "string" ? data.ddl : "";
+  }
+
   async download(generationId, { format = null } = {}) {
     const exportFormat = format || "sql";
     const path = `/generations/${encodeURIComponent(generationId)}/download/?export_format=${encodeURIComponent(exportFormat)}`;

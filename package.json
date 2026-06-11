@@ -1,11 +1,12 @@
 {
   "name": "@seedbase/client",
-  "version": "0.1.1",
-  "description": "Node.js client for Seedbase — generate realistic, relationship-preserving, privacy-safe test data and pull it into your database.",
+  "version": "0.2.0",
+  "description": "Node.js client for Seedbase \u2014 generate realistic, relationship-preserving, privacy-safe test data and pull it into your database.",
   "type": "module",
   "main": "./index.js",
   "exports": {
-    ".": "./index.js"
+    ".": "./index.js",
+    "./mcp": "./src/mcp.js"
   },
   "engines": {
     "node": ">=18"
@@ -16,6 +17,7 @@
   "files": [
     "index.js",
     "src",
+    "bin",
     "README.md"
   ],
   "keywords": [
@@ -26,7 +28,7 @@
     "fixtures"
   ],
   "license": "MIT",
-  "author": "Marcel Gläser <contact@seedba.se>",
+  "author": "Marcel Gl\u00e4ser <contact@seedba.se>",
   "homepage": "https://seedba.se",
   "repository": {
     "type": "git",
@@ -37,5 +39,8 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "bin": {
+    "seedbase-mcp": "./bin/seedbase-mcp.js"
   }
 }
