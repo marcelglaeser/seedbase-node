@@ -1,6 +1,7 @@
 {
   "name": "@seedbase/client",
-  "version": "0.2.1",
+  "version": "0.2.2",
+  "mcpName": "io.github.marcelglaeser/seedbase",
   "description": "Node.js client + MCP server for Seedbase \u2014 generate realistic, relationship-preserving, privacy-safe test data and pull it into your database.",
   "type": "module",
   "main": "./index.js",
@@ -37,7 +38,7 @@
   "homepage": "https://seedba.se",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/marcelglaeser/seedbase-node.git"
+    "url": "https://github.com/marcelglaeser/seedbase-node.git"
   },
   "bugs": {
     "url": "https://github.com/marcelglaeser/seedbase-node/issues"
