@@ -2,7 +2,7 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.marcelglaeser/seedbase",
   "title": "SeedBase Test Data",
-  "description": "Generate realistic, FK-consistent synthetic test data for your databases: list projects, get schema DDL, generate datasets as SQL.",
+  "description": "Generate realistic, FK-consistent synthetic test data for your databases from your AI assistant.",
   "repository": {
     "url": "https://github.com/marcelglaeser/seedbase-node",
     "source": "github"
@@ -20,7 +20,7 @@
       "environmentVariables": [
         {
           "name": "SEEDBASE_API_KEY",
-          "description": "SeedBase API key (dr_sk_...) — create at https://seedba.se -> Settings -> API keys",
+          "description": "SeedBase API key (dr_sk_...) \u2014 create at https://seedba.se -> Settings -> API keys",
           "isRequired": true,
           "format": "string",
           "isSecret": true
@@ -35,7 +35,7 @@
       "headers": [
         {
           "name": "Authorization",
-          "description": "Bearer <SEEDBASE_API_KEY> — create the API key at https://seedba.se -> Settings -> API keys",
+          "description": "Bearer <SEEDBASE_API_KEY> \u2014 create the API key at https://seedba.se -> Settings -> API keys",
           "isRequired": true,
           "isSecret": true
         }
