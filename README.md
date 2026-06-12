@@ -35,6 +35,43 @@ import { writeFile } from "node:fs/promises";
 await writeFile("dump.sql", bytes);
 ```
 
+## MCP server (Claude Code, Claude Desktop & friends)
+
+This package ships `seedbase-mcp` — a zero-dependency [Model Context Protocol](https://modelcontextprotocol.io)
+server that lets AI assistants generate test data for you. Describe what you
+need ("fill my Shop project with MySQL test data") and the assistant drives
+SeedBase through three tools:
+
+| Tool | What it does |
+| --- | --- |
+| `list_projects` | List your SeedBase projects (id, name, database type) |
+| `get_ddl` | Get a project's schema as `CREATE TABLE` statements, per dialect |
+| `generate_test_data` | Generate a fresh FK-consistent dataset and return it as SQL |
+
+**Claude Code:**
+
+```bash
+claude mcp add-json seedbase '{"type":"stdio","command":"npx","args":["-y","-p","@seedbase/client","seedbase-mcp"],"env":{"SEEDBASE_API_KEY":"dr_sk_..."}}'
+```
+
+**Claude Desktop** (`claude_desktop_config.json`):
+
+```json
+{
+  "mcpServers": {
+    "seedbase": {
+      "command": "npx",
+      "args": ["-y", "-p", "@seedbase/client", "seedbase-mcp"],
+      "env": { "SEEDBASE_API_KEY": "dr_sk_..." }
+    }
+  }
+}
+```
+
+Create the API key at [seedba.se](https://seedba.se) → Settings → API keys. The
+server is stdio-only, talks exclusively to `https://seedba.se`, and stores
+nothing locally.
+
 ## Authentication
 
 The token is resolved in this order:
