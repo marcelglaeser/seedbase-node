@@ -1,0 +1,17 @@
+# Smithery-Registry-Konfiguration — https://smithery.ai/docs
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    required:
+      - seedbaseApiKey
+    properties:
+      seedbaseApiKey:
+        type: string
+        description: SeedBase API key (create at https://seedba.se -> Settings -> API keys)
+  commandFunction: |-
+    (config) => ({
+      command: "node",
+      args: ["bin/seedbase-mcp.js"],
+      env: { SEEDBASE_API_KEY: config.seedbaseApiKey }
+    })
