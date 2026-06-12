@@ -4,6 +4,8 @@
 
 # @seedbase/client
 
+[![smithery badge](https://smithery.ai/badge/marcelgl/seedbase)](https://smithery.ai/servers/marcelgl/seedbase)
+
 Generate realistic, relationship-preserving, privacy-safe test data for your databases — and pull it straight into your local or CI database.
 
 Seedbase lives on [seedba.se](https://seedba.se): you model (or import) a schema there, generate datasets, and use this package to pull them into Postgres, MySQL, SQLite and more. Schema-aware, foreign-key-correct, reproducible by seed.
