@@ -48,7 +48,14 @@ SeedBase through three tools:
 | `get_ddl` | Get a project's schema as `CREATE TABLE` statements, per dialect |
 | `generate_test_data` | Generate a fresh FK-consistent dataset and return it as SQL |
 
-**Claude Code:**
+**Hosted (zero install)** — point any Streamable-HTTP MCP client at
+`https://seedba.se/mcp` with an `Authorization: Bearer dr_sk_...` header:
+
+```bash
+claude mcp add-json seedbase '{"type":"http","url":"https://seedba.se/mcp","headers":{"Authorization":"Bearer dr_sk_..."}}'
+```
+
+**Local via Claude Code (stdio):**
 
 ```bash
 claude mcp add-json seedbase '{"type":"stdio","command":"npx","args":["-y","-p","@seedbase/client","seedbase-mcp"],"env":{"SEEDBASE_API_KEY":"dr_sk_..."}}'
