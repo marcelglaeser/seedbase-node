@@ -349,4 +349,24 @@ export class SeedbaseClient {
     const path = `/generations/${encodeURIComponent(generationId)}/download/?export_format=${encodeURIComponent(exportFormat)}`;
     return this._request("GET", path, { raw: true });
   }
+
+  /**
+   * Generate a dataset and return its rows as { tableName: [row, ...] }, in
+   * foreign-key-safe (topological) order. Inject straight into a test or seed.
+   */
+  async seededRows(projectId, { seed = null, rows = null, timeout } = {}) {
+    const generation = await this.generate(projectId, {
+      seed,
+      rows,
+      wait: true,
+      ...(timeout != null ? { timeout } : {}),
+    });
+    const generationId = generation.id || generation.generation_id;
+    if (!generationId) {
+      throw new SeedbaseError("Generation finished without an id.");
+    }
+    const json = await this.download(String(generationId), { format: "json" });
+    const data = JSON.parse(typeof json === "string" ? json : new TextDecoder().decode(json));
+    return data && typeof data.tables === "object" ? data.tables : data;
+  }
 }

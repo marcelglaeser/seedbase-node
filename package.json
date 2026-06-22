@@ -1,13 +1,14 @@
 {
   "name": "@seedbase/client",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "mcpName": "io.github.marcelglaeser/seedbase",
-  "description": "Node.js client + MCP server for Seedbase \u2014 generate realistic, relationship-preserving, privacy-safe test data and pull it into your database.",
+  "description": "Node.js client + MCP server for Seedbase — generate realistic, relationship-preserving, privacy-safe test data and pull it into your database.",
   "type": "module",
   "main": "./index.js",
   "exports": {
     ".": "./index.js",
-    "./mcp": "./src/mcp.js"
+    "./mcp": "./src/mcp.js",
+    "./prisma": "./src/prisma.js"
   },
   "engines": {
     "node": ">=18"
@@ -34,7 +35,7 @@
     "ai"
   ],
   "license": "MIT",
-  "author": "Marcel Gl\u00e4ser <contact@seedba.se>",
+  "author": "Marcel Gläser <contact@seedba.se>",
   "homepage": "https://seedba.se",
   "repository": {
     "type": "git",

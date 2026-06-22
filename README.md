@@ -77,9 +77,10 @@ claude mcp add-json seedbase '{"type":"stdio","command":"npx","args":["-y","-p",
 }
 ```
 
-Create the API key at [seedba.se](https://seedba.se) → Settings → API keys. The
-server is stdio-only, talks exclusively to `https://seedba.se`, and stores
-nothing locally.
+Create a **free** account at [seedba.se/register](https://seedba.se/register) (no
+credit card), then create an API key under Settings → API keys. The free tier is
+enough to generate full, foreign-key-consistent datasets. The server is stdio-only,
+talks exclusively to `https://seedba.se`, and stores nothing locally.
 
 ## Authentication
 
@@ -113,6 +114,7 @@ new SeedbaseClient({
 | `getGeneration(generationId)` | A single generation. |
 | `generate(projectId, opts)` | Trigger a generation. `opts`: `{ seed, rows, format, rebaseTo, wait, timeout, pollInterval }`. With `wait: true` it polls until the generation reaches `completed`/`failed`/`cancelled`. |
 | `download(generationId, { format })` | Download the generated artifact as a `Uint8Array`. `format` defaults to `"sql"`. |
+| `seededRows(projectId, { seed, rows })` | Generate and return the rows as `{ tableName: [row, ...] }`, in foreign-key-safe order. |
 | `exportConfig(projectId)` | The project's engine config as an object. |
 | `importConfig(projectId, config)` | Replace the project's engine config. |
 
@@ -131,6 +133,27 @@ try {
   }
 }
 ```
+
+## Prisma seed
+
+Fill a Prisma-managed database with realistic, foreign-key-consistent data, in
+one call. Your schema must already exist (your `prisma migrate` owns it);
+SeedBase only fills it. Free tier.
+
+```js
+// prisma/seed.ts
+import { PrismaClient } from "@prisma/client";
+import { SeedbaseClient } from "@seedbase/client";
+import { seedPrisma } from "@seedbase/client/prisma";
+
+const prisma = new PrismaClient();
+const client = new SeedbaseClient({ token: process.env.SEEDBASE_TOKEN });
+
+await seedPrisma(prisma, client, { project: process.env.SEEDBASE_PROJECT, seed: 42 });
+```
+
+Then run `prisma db seed`. A runnable demo (offline, no account) is in
+[`examples/prisma-seed-demo.mjs`](examples/prisma-seed-demo.mjs).
 
 ## Links
 
