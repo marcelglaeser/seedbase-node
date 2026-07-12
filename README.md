@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://seedba.se/seedbase-logo-256.png" alt="Seedbase" width="120" />
+  <img src="https://seedbase.dev/seedbase-logo-256.png" alt="Seedbase" width="120" />
 </p>
 
 # @seedbase/client
@@ -8,7 +8,7 @@
 
 Generate realistic, relationship-preserving, privacy-safe test data for your databases — and pull it straight into your local or CI database.
 
-Seedbase lives on [seedba.se](https://seedba.se): you model (or import) a schema there, generate datasets, and use this package to pull them into Postgres, MySQL, SQLite and more. Schema-aware, foreign-key-correct, reproducible by seed.
+Seedbase lives on [seedbase.dev](https://seedbase.dev): you model (or import) a schema there, generate datasets, and use this package to pull them into Postgres, MySQL, SQLite and more. Schema-aware, foreign-key-correct, reproducible by seed.
 
 This is the Node.js client, a counterpart to the [Python SDK](https://pypi.org/project/seedbase/).
 
@@ -42,19 +42,21 @@ await writeFile("dump.sql", bytes);
 This package ships `seedbase-mcp` — a zero-dependency [Model Context Protocol](https://modelcontextprotocol.io)
 server that lets AI assistants generate test data for you. Describe what you
 need ("fill my Shop project with MySQL test data") and the assistant drives
-SeedBase through three tools:
+SeedBase end-to-end through five tools:
 
 | Tool | What it does |
 | --- | --- |
 | `list_projects` | List your SeedBase projects (id, name, database type) |
+| `create_project` | Create a new, empty project |
+| `import_schema` | Import a schema from SQL DDL (raw `pg_dump --schema-only` works), CSV/JSON or ORM model code |
 | `get_ddl` | Get a project's schema as `CREATE TABLE` statements, per dialect |
-| `generate_test_data` | Generate a fresh FK-consistent dataset and return it as SQL |
+| `generate_test_data` | Generate a fresh FK-consistent dataset and return it as SQL (large results are written to a local file, never truncated) |
 
 **Hosted (zero install)** — point any Streamable-HTTP MCP client at
-`https://seedba.se/mcp` with an `Authorization: Bearer dr_sk_...` header:
+`https://seedbase.dev/mcp` with an `Authorization: Bearer dr_sk_...` header:
 
 ```bash
-claude mcp add-json seedbase '{"type":"http","url":"https://seedba.se/mcp","headers":{"Authorization":"Bearer dr_sk_..."}}'
+claude mcp add-json seedbase '{"type":"http","url":"https://seedbase.dev/mcp","headers":{"Authorization":"Bearer dr_sk_..."}}'
 ```
 
 **Local via Claude Code (stdio):**
@@ -77,10 +79,10 @@ claude mcp add-json seedbase '{"type":"stdio","command":"npx","args":["-y","-p",
 }
 ```
 
-Create a **free** account at [seedba.se/register](https://seedba.se/register) (no
+Create a **free** account at [seedbase.dev/register](https://seedbase.dev/register) (no
 credit card), then create an API key under Settings → API keys. The free tier is
 enough to generate full, foreign-key-consistent datasets. The server is stdio-only,
-talks exclusively to `https://seedba.se`, and stores nothing locally.
+talks exclusively to `https://seedbase.dev`, and stores nothing locally.
 
 ## Authentication
 
@@ -92,14 +94,14 @@ The token is resolved in this order:
 
 API keys with the `dr_sk_` prefix are sent as `Authorization: Bearer ...`, other
 tokens as `Authorization: Token ...`. Get a key at
-[seedba.se/settings?tab=api-keys](https://seedba.se/settings?tab=api-keys).
+[seedbase.dev/settings?tab=api-keys](https://seedbase.dev/settings?tab=api-keys).
 
 ## API
 
 ```js
 new SeedbaseClient({
   token,            // optional, see resolution order above
-  apiUrl,           // default "https://seedba.se/api/v1" (https enforced, http only for localhost)
+  apiUrl,           // default "https://seedbase.dev/api/v1" (https enforced, http only for localhost)
   configPath,       // override ~/.seedbase/config.json
   requestTimeout,   // per-request timeout in ms, default 30000
   fetch,            // inject a custom fetch (e.g. for tests)
@@ -157,8 +159,8 @@ Then run `prisma db seed`. A runnable demo (offline, no account) is in
 
 ## Links
 
-- Website: https://seedba.se
-- Docs: https://seedba.se/docs
-- API keys: https://seedba.se/settings?tab=api-keys
+- Website: https://seedbase.dev
+- Docs: https://seedbase.dev/docs
+- API keys: https://seedbase.dev/settings?tab=api-keys
 
 MIT licensed.

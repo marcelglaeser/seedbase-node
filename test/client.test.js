@@ -141,8 +141,8 @@ test("pagination: follows next links and aggregates results", async () => {
   const rows = await client.listProjects();
   assert.deepEqual(rows.map((r) => r.id), [1, 2, 3, 4]);
   assert.equal(fetchImpl.calls.length, 3);
-  assert.equal(fetchImpl.calls[1].url, "https://seedba.se/api/v1/datasets/?page=2");
-  assert.equal(fetchImpl.calls[2].url, "https://seedba.se/api/v1/datasets/?page=3");
+  assert.equal(fetchImpl.calls[1].url, "https://seedbase.dev/api/v1/datasets/?page=2");
+  assert.equal(fetchImpl.calls[2].url, "https://seedbase.dev/api/v1/datasets/?page=3");
 });
 
 test("pagination: plain array response", async () => {

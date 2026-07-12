@@ -42,12 +42,12 @@ test("initialize echoes protocol version and announces tools", async () => {
   assert.equal(res.result.serverInfo.name, "seedbase");
 });
 
-test("tools/list returns the three documented tools", async () => {
+test("tools/list returns the five documented tools", async () => {
   const handle = makeHandler([]);
   const res = await handle({ jsonrpc: "2.0", id: 2, method: "tools/list" });
   assert.deepEqual(
     res.result.tools.map((t) => t.name),
-    ["list_projects", "get_ddl", "generate_test_data"],
+    ["list_projects", "get_ddl", "generate_test_data", "create_project", "import_schema"],
   );
   assert.equal(res.result.tools, TOOLS);
 });
@@ -88,6 +88,56 @@ test("generate_test_data generates, waits and returns SQL", async () => {
   });
   assert.equal(res.result.isError, undefined);
   assert.match(res.result.content[0].text, /INSERT INTO "users"/);
+});
+
+test("generate_test_data writes oversized SQL to a file instead of truncating", async () => {
+  const genId = "99999999-8888-7777-6666-555555555555";
+  const bigSql = 'INSERT INTO "users" VALUES (1);\n'.repeat(4000);
+  const handle = makeHandler([
+    [`/generations/${genId}/download/`, bigSql],
+    [`/generations/${genId}/`, { id: genId, status: "completed" }],
+    [`/datasets/${PROJECT_ID}/generate/`, { generation_id: genId, status: "queued" }],
+  ]);
+  const res = await handle({
+    jsonrpc: "2.0", id: 8, method: "tools/call",
+    params: { name: "generate_test_data", arguments: { project: PROJECT_ID, rows: 500 } },
+  });
+  const text = res.result.content[0].text;
+  assert.doesNotMatch(text, /INSERT INTO/);
+  assert.match(text, /COMPLETE file was written to/);
+  const fileMatch = text.match(/written to:\n(.+\.sql)/);
+  assert.ok(fileMatch, "response names the file path");
+  const { readFileSync } = await import("node:fs");
+  assert.equal(readFileSync(fileMatch[1], "utf-8"), bigSql);
+});
+
+test("create_project creates and reports the new project", async () => {
+  const handle = makeHandler([
+    ["/datasets/", { id: PROJECT_ID, name: "Bees", db_type: "postgresql" }],
+  ]);
+  const res = await handle({
+    jsonrpc: "2.0", id: 9, method: "tools/call",
+    params: { name: "create_project", arguments: { name: "Bees" } },
+  });
+  assert.equal(res.result.isError, undefined);
+  assert.match(res.result.content[0].text, /Created project 'Bees'/);
+});
+
+test("import_schema imports DDL and summarizes tables/fks", async () => {
+  const handle = makeHandler([
+    [`/datasets/${PROJECT_ID}/import/`, {
+      schema: { tables: { users: {}, posts: {} }, foreign_keys: [{ from_table: "posts", to_table: "users" }] },
+      summary: { table_count: 2, fk_count: 1 },
+      warnings: [{ level: "warning", message: "1 of 3 CREATE TABLE statements could not be parsed" }],
+    }],
+  ]);
+  const res = await handle({
+    jsonrpc: "2.0", id: 10, method: "tools/call",
+    params: { name: "import_schema", arguments: { project: PROJECT_ID, content: "CREATE TABLE users (id int);" } },
+  });
+  const text = res.result.content[0].text;
+  assert.match(text, /2 tables, 1 foreign keys/);
+  assert.match(text, /Warning: 1 of 3/);
 });
 
 test("tool errors come back as isError result, not protocol error", async () => {

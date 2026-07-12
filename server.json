@@ -7,20 +7,20 @@
     "url": "https://github.com/marcelglaeser/seedbase-node",
     "source": "github"
   },
-  "websiteUrl": "https://seedba.se",
-  "version": "0.2.2",
+  "websiteUrl": "https://seedbase.dev",
+  "version": "0.4.0",
   "packages": [
     {
       "registryType": "npm",
       "identifier": "@seedbase/client",
-      "version": "0.2.2",
+      "version": "0.4.0",
       "transport": {
         "type": "stdio"
       },
       "environmentVariables": [
         {
           "name": "SEEDBASE_API_KEY",
-          "description": "SeedBase API key (dr_sk_...) \u2014 create at https://seedba.se -> Settings -> API keys",
+          "description": "SeedBase API key (dr_sk_...) \u2014 create at https://seedbase.dev -> Settings -> API keys",
           "isRequired": true,
           "format": "string",
           "isSecret": true
@@ -31,11 +31,11 @@
   "remotes": [
     {
       "type": "streamable-http",
-      "url": "https://seedba.se/mcp",
+      "url": "https://seedbase.dev/mcp",
       "headers": [
         {
           "name": "Authorization",
-          "description": "Bearer <SEEDBASE_API_KEY> \u2014 create the API key at https://seedba.se -> Settings -> API keys",
+          "description": "Bearer <SEEDBASE_API_KEY> \u2014 create the API key at https://seedbase.dev -> Settings -> API keys",
           "isRequired": true,
           "isSecret": true
         }

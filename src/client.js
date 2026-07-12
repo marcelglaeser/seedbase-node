@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
 
-export const API_URL = "https://seedba.se/api/v1";
+export const API_URL = "https://seedbase.dev/api/v1";
 export const DEFAULT_REQUEST_TIMEOUT = 30000;
 export const DEFAULT_GENERATION_TIMEOUT = 300000;
 const MAX_PAGES = 50;
@@ -246,6 +246,18 @@ export class SeedbaseClient {
 
   async getProject(projectId) {
     return this._request("GET", `/datasets/${encodeURIComponent(projectId)}/`);
+  }
+
+  async createProject(name, { dbType = null } = {}) {
+    const payload = { name };
+    if (dbType) payload.db_type = dbType;
+    return this._request("POST", "/datasets/", { payload });
+  }
+
+  async importSchema(projectId, content, { format = null } = {}) {
+    const payload = { content };
+    if (format) payload.format = format;
+    return this._request("POST", `/datasets/${encodeURIComponent(projectId)}/import/`, { payload });
   }
 
   async listGenerations(projectId) {
