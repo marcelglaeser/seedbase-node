@@ -4,7 +4,7 @@
 
 # @seedbase/client
 
-[![smithery badge](https://smithery.ai/badge/marcelgl/seedbase)](https://smithery.ai/servers/marcelgl/seedbase)
+[![LightNow MCP capabilities](https://lightnow.ai/badge/io.github.marcelglaeser/seedbase)](https://lightnow.ai/servers/io.github.marcelglaeser/seedbase)
 
 Generate realistic, relationship-preserving, privacy-safe test data for your databases — and pull it straight into your local or CI database.
 
